@@ -178,7 +178,7 @@ export default function CorretoraPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>cleide@corretoradeimoveis.com</span>
+                <span>Corretoradeimoveis2012@gmail.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <Instagram className="w-4 h-4" />
@@ -486,9 +486,9 @@ export default function CorretoraPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-sm text-gray-300">
-                <p>📞 (11) 99999-9999</p>
-                <p>✉️ cleide@corretoradeimoveis.com</p>
-                <p>📍 São Paulo, SP</p>
+                <p>📞 (61) 99527-7358</p>
+                <p>✉️ Corretoradeimoveis2012@gmail.com</p>
+                <p>📍 Aguas Lindas, GO</p>
               </div>
             </div>
             <div>
