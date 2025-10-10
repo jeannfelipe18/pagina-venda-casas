@@ -174,7 +174,7 @@ export default function CorretoraPage() {
             <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-                <span>(11) 99999-9999</span>
+                <span className="lasy-highlight">(61) 995277358</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
