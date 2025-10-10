@@ -87,6 +87,10 @@ export default function CorretoraPage() {
   const [dialogAberto, setDialogAberto] = useState(false)
   const [novaCaracteristica, setNovaCaracteristica] = useState('')
 
+  // NOVO: Estados para edição
+  const [imovelEditando, setImovelEditando] = useState<Imovel | null>(null)
+  const [novaCaracteristicaEdicao, setNovaCaracteristicaEdicao] = useState('')
+
   const adicionarImovel = () => {
     if (!novoImovel.titulo || !novoImovel.preco || !novoImovel.endereco) {
       alert('Por favor, preencha os campos obrigatórios')
@@ -148,6 +152,44 @@ export default function CorretoraPage() {
     })
   }
 
+  // NOVO: Remover imóvel
+  const removerImovel = (id: string) => {
+    setImoveis(imoveis.filter(imovel => imovel.id !== id))
+  }
+
+  // NOVO: Adicionar característica na edição
+  const adicionarCaracteristicaEdicao = () => {
+    if (imovelEditando && novaCaracteristicaEdicao.trim()) {
+      setImovelEditando({
+        ...imovelEditando,
+        caracteristicas: [...imovelEditando.caracteristicas, novaCaracteristicaEdicao.trim()]
+      })
+      setNovaCaracteristicaEdicao('')
+    }
+  }
+
+  // NOVO: Remover característica na edição
+  const removerCaracteristicaEdicao = (index: number) => {
+    if (imovelEditando) {
+      setImovelEditando({
+        ...imovelEditando,
+        caracteristicas: imovelEditando.caracteristicas.filter((_, i) => i !== index)
+      })
+    }
+  }
+
+  // NOVO: Salvar edição
+  const salvarEdicao = () => {
+    if (imovelEditando) {
+      if (!imovelEditando.titulo || !imovelEditando.preco || !imovelEditando.endereco) {
+        alert('Por favor, preencha os campos obrigatórios')
+        return
+      }
+      setImoveis(imoveis.map(imovel => imovel.id === imovelEditando.id ? imovelEditando : imovel))
+      setImovelEditando(null)
+    }
+  }
+
   const formatarPreco = (preco: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -178,7 +220,7 @@ export default function CorretoraPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>Corretoradeimoveis2012@gmail.com</span>
+                <span>corretoradeimoveis2012@gmail.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <Instagram className="w-4 h-4" />
@@ -456,9 +498,27 @@ export default function CorretoraPage() {
                 )}
                 
                 <Separator className="my-4" />
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Entrar em Contato
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
+                    onClick={() => setImovelEditando(imovel)}
+                    type="button"
+                    variant="outline"
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                    onClick={() => removerImovel(imovel.id)}
+                    type="button"
+                    variant="destructive"
+                  >
+                    Excluir
+                  </Button>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Entrar em Contato
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -470,6 +530,163 @@ export default function CorretoraPage() {
             <h3 className="text-xl font-semibold text-gray-600 mb-2">Nenhum imóvel cadastrado</h3>
             <p className="text-gray-500">Adicione o primeiro imóvel para começar!</p>
           </div>
+        )}
+
+        {/* NOVO: Dialog de edição */}
+        {imovelEditando && (
+          <Dialog open={!!imovelEditando} onOpenChange={() => setImovelEditando(null)}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Editar Imóvel</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-titulo">Título *</Label>
+                    <Input
+                      id="edit-titulo"
+                      value={imovelEditando.titulo}
+                      onChange={(e) => setImovelEditando({...imovelEditando, titulo: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-preco">Preço (R$) *</Label>
+                    <Input
+                      id="edit-preco"
+                      type="number"
+                      value={imovelEditando.preco}
+                      onChange={(e) => setImovelEditando({...imovelEditando, preco: Number(e.target.value)})}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="edit-endereco">Endereço *</Label>
+                  <Input
+                    id="edit-endereco"
+                    value={imovelEditando.endereco}
+                    onChange={(e) => setImovelEditando({...imovelEditando, endereco: e.target.value})}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-cidade">Cidade</Label>
+                    <Input
+                      id="edit-cidade"
+                      value={imovelEditando.cidade}
+                      onChange={(e) => setImovelEditando({...imovelEditando, cidade: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-bairro">Bairro</Label>
+                    <Input
+                      id="edit-bairro"
+                      value={imovelEditando.bairro}
+                      onChange={(e) => setImovelEditando({...imovelEditando, bairro: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div>
+                    <Label htmlFor="edit-area">Área (m²)</Label>
+                    <Input
+                      id="edit-area"
+                      type="number"
+                      value={imovelEditando.area}
+                      onChange={(e) => setImovelEditando({...imovelEditando, area: Number(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-quartos">Quartos</Label>
+                    <Input
+                      id="edit-quartos"
+                      type="number"
+                      value={imovelEditando.quartos}
+                      onChange={(e) => setImovelEditando({...imovelEditando, quartos: Number(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-banheiros">Banheiros</Label>
+                    <Input
+                      id="edit-banheiros"
+                      type="number"
+                      value={imovelEditando.banheiros}
+                      onChange={(e) => setImovelEditando({...imovelEditando, banheiros: Number(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-vagas">Vagas</Label>
+                    <Input
+                      id="edit-vagas"
+                      type="number"
+                      value={imovelEditando.vagas}
+                      onChange={(e) => setImovelEditando({...imovelEditando, vagas: Number(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-tipo">Tipo</Label>
+                    <Select value={imovelEditando.tipo} onValueChange={(value) => setImovelEditando({...imovelEditando, tipo: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Casa">Casa</SelectItem>
+                        <SelectItem value="Apartamento">Apartamento</SelectItem>
+                        <SelectItem value="Sobrado">Sobrado</SelectItem>
+                        <SelectItem value="Kitnet">Kitnet</SelectItem>
+                        <SelectItem value="Terreno">Terreno</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="edit-imagem">URL da Imagem</Label>
+                  <Input
+                    id="edit-imagem"
+                    value={imovelEditando.imagem}
+                    onChange={(e) => setImovelEditando({...imovelEditando, imagem: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-descricao">Descrição</Label>
+                  <Textarea
+                    id="edit-descricao"
+                    value={imovelEditando.descricao}
+                    onChange={(e) => setImovelEditando({...imovelEditando, descricao: e.target.value})}
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label>Características Especiais</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      value={novaCaracteristicaEdicao}
+                      onChange={(e) => setNovaCaracteristicaEdicao(e.target.value)}
+                      placeholder="Ex: Piscina, Churrasqueira..."
+                      onKeyPress={(e) => e.key === 'Enter' && adicionarCaracteristicaEdicao()}
+                    />
+                    <Button type="button" onClick={adicionarCaracteristicaEdicao} variant="outline">
+                      Adicionar
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {imovelEditando.caracteristicas?.map((caracteristica, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="cursor-pointer"
+                        onClick={() => removerCaracteristicaEdicao(index)}
+                      >
+                        {caracteristica} ×
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <Button onClick={salvarEdicao} className="bg-blue-600 hover:bg-blue-700">
+                  Salvar Alterações
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
 
@@ -487,7 +704,7 @@ export default function CorretoraPage() {
               <h3 className="text-lg font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-sm text-gray-300">
                 <p>📞 (61) 99527-7358</p>
-                <p>✉️ Corretoradeimoveis2012@gmail.com</p>
+                <p>✉️ corretoradeimoveis2012@gmail.com</p>
                 <p>📍 Aguas Lindas, GO</p>
               </div>
             </div>
