@@ -31,8 +31,7 @@ interface Imovel {
 }
 
 export default function CorretoraPage() {
-  const [imoveis, setImoveis] = useState<Imovel[]>([
-  ])
+  const [imoveis, setImoveis] = useState<Imovel[]>([])
 
   const [novoImovel, setNovoImovel] = useState<Partial<Imovel>>({
     titulo: '',
@@ -52,11 +51,17 @@ export default function CorretoraPage() {
 
   const [dialogAberto, setDialogAberto] = useState(false)
   const [novaCaracteristica, setNovaCaracteristica] = useState('')
+  const [imagemArquivo, setImagemArquivo] = useState<File | null>(null)
 
   const adicionarImovel = () => {
     if (!novoImovel.titulo || !novoImovel.preco || !novoImovel.endereco) {
       alert('Por favor, preencha os campos obrigatórios')
       return
+    }
+
+    let imagemUrl = novoImovel.imagem || 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop'
+    if (imagemArquivo) {
+      imagemUrl = URL.createObjectURL(imagemArquivo)
     }
 
     const imovel: Imovel = {
@@ -73,7 +78,7 @@ export default function CorretoraPage() {
       tipo: novoImovel.tipo || 'Casa',
       descricao: novoImovel.descricao || '',
       caracteristicas: novoImovel.caracteristicas || [],
-      imagem: novoImovel.imagem || 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop',
+      imagem: imagemUrl,
       dataPublicacao: new Date()
     }
 
@@ -93,6 +98,7 @@ export default function CorretoraPage() {
       caracteristicas: [],
       imagem: ''
     })
+    setImagemArquivo(null)
     setDialogAberto(false)
   }
 
@@ -140,27 +146,15 @@ export default function CorretoraPage() {
             <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-<<<<<<< HEAD
-                <span>(11) 99999-9999</span>
+                <span className="lasy-highlight">(61) 995277358</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>cleide@corretoradeimoveis.com</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Instagram className="w-4 h-4" />
-                <span>@cleidecorretora</span>
-=======
-                <span>(61) 99527-7358</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                <span>Corretoradeimoveis2012@gmail.com</span>
+                <span>corretoradeimoveis2012@gmail.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <Instagram className="w-4 h-4" />
                 <span>@cleidemoreiraimoveis</span>
->>>>>>> 52a269e (adicionando modificações do html)
               </div>
             </div>
           </div>
@@ -178,11 +172,9 @@ export default function CorretoraPage() {
             
             <Dialog open={dialogAberto} onOpenChange={setDialogAberto}>
               <DialogTrigger asChild>
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <span className="flex items-center">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Imóvel
-                  </span>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar Imóvel
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -287,7 +279,7 @@ export default function CorretoraPage() {
                     </div>
                     <div>
                       <Label htmlFor="tipo">Tipo</Label>
-                      <Select value={novoImovel.tipo ?? ""} onValueChange={(value) => setNovoImovel({...novoImovel, tipo: value})}>
+                      <Select value={novoImovel.tipo} onValueChange={(value) => setNovoImovel({...novoImovel, tipo: value})}>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
@@ -309,6 +301,15 @@ export default function CorretoraPage() {
                       value={novoImovel.imagem}
                       onChange={(e) => setNovoImovel({...novoImovel, imagem: e.target.value})}
                       placeholder="https://exemplo.com/imagem.jpg"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="imagem-arquivo">Ou anexe uma imagem</Label>
+                    <Input
+                      id="imagem-arquivo"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setImagemArquivo(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
                     />
                   </div>
 
@@ -436,9 +437,11 @@ export default function CorretoraPage() {
                 )}
                 
                 <Separator className="my-4" />
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Entrar em Contato
-                </Button>
+                <div className="flex gap-2">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Entrar em Contato
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -466,22 +469,16 @@ export default function CorretoraPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-sm text-gray-300">
-<<<<<<< HEAD
-                <p>📞 (11) 99999-9999</p>
-                <p>✉️ cleide@corretoradeimoveis.com</p>
-                <p>📍 São Paulo, SP</p>
-=======
                 <p>📞 (61) 99527-7358</p>
-                <p>✉️ Corretoradeimoveis2012@gmail.com</p>
+                <p>✉️ corretoradeimoveis2012@gmail.com</p>
                 <p>📍 Aguas Lindas, GO</p>
->>>>>>> 52a269e (adicionando modificações do html)
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Serviços</h3>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li>• Venda de Imóveis</li>
-                <li>• Locação</li>
+                <li>• Aluguel</li>
                 <li>• Avaliação</li>
                 <li>• Consultoria</li>
               </ul>
@@ -495,5 +492,4 @@ export default function CorretoraPage() {
       </footer>
     </div>
   )
-
 }
