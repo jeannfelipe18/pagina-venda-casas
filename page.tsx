@@ -32,40 +32,6 @@ interface Imovel {
 
 export default function CorretoraPage() {
   const [imoveis, setImoveis] = useState<Imovel[]>([
-    {
-      id: '1',
-      titulo: 'Casa Moderna no Centro',
-      preco: 450000,
-      endereco: 'Rua das Flores, 123',
-      cidade: 'São Paulo',
-      bairro: 'Centro',
-      area: 180,
-      quartos: 3,
-      banheiros: 2,
-      vagas: 2,
-      tipo: 'Casa',
-      descricao: 'Linda casa moderna com acabamento de primeira qualidade, localizada em área nobre do centro da cidade.',
-      caracteristicas: ['Piscina', 'Churrasqueira', 'Jardim', 'Portão Eletrônico'],
-      imagem: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop',
-      dataPublicacao: new Date('2024-01-15')
-    },
-    {
-      id: '2',
-      titulo: 'Apartamento Luxuoso Vista Mar',
-      preco: 680000,
-      endereco: 'Av. Beira Mar, 456',
-      cidade: 'Santos',
-      bairro: 'Gonzaga',
-      area: 120,
-      quartos: 2,
-      banheiros: 2,
-      vagas: 1,
-      tipo: 'Apartamento',
-      descricao: 'Apartamento com vista panorâmica para o mar, totalmente mobiliado e com localização privilegiada.',
-      caracteristicas: ['Vista Mar', 'Mobiliado', 'Sacada', 'Portaria 24h'],
-      imagem: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop',
-      dataPublicacao: new Date('2024-01-10')
-    }
   ])
 
   const [novoImovel, setNovoImovel] = useState<Partial<Imovel>>({
@@ -529,4 +495,5 @@ export default function CorretoraPage() {
       </footer>
     </div>
   )
+
 }
